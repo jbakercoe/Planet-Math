@@ -12,11 +12,12 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] Text timerText;
     [SerializeField] Text scoreText;
     [SerializeField] GameObject[] targets;
-    [SerializeField] Planet[] dragPlanets;
+    //[SerializeField] Planet[] dragPlanets;
     [SerializeField] PlanetKey[] planetKeys;
-    [SerializeField] Button startButton;
+    //[SerializeField] Button startButton;
     [SerializeField] float maxTime = 45f;
     [SerializeField] Image endGameMenu;
+    [SerializeField] Planet[] planets;
 
     private int targetWeight;
     private int userWeight;
@@ -51,7 +52,7 @@ public class GameManager : Singleton<GameManager>
     // Use this for initialization
     void Start()
     {
-        toggleGameObjects(false);
+        //toggleGameObjects(false);
         StartGame();
         endGameMenu.gameObject.SetActive(false);
     }
@@ -75,32 +76,32 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    private void toggleGameObjects(bool isActive)
-    {
-        foreach (var planet in dragPlanets)
-        {
-            planet.gameObject.SetActive(isActive);
-        }
-        foreach (var planetKey in planetKeys)
-        {
-            planetKey.gameObject.SetActive(isActive);
-        }
-        foreach (var target in targets)
-        {
-            target.gameObject.SetActive(isActive);
-        }
-        targetWeightText.gameObject.SetActive(isActive);
-        playerWeightText.gameObject.SetActive(isActive);
-        scoreText.gameObject.SetActive(isActive);
-    }
+    //private void toggleGameObjects(bool isActive)
+    //{
+    //    foreach (var planet in dragPlanets)
+    //    {
+    //        planet.gameObject.SetActive(isActive);
+    //    }
+    //    foreach (var planetKey in planetKeys)
+    //    {
+    //        planetKey.gameObject.SetActive(isActive);
+    //    }
+    //    foreach (var target in targets)
+    //    {
+    //        target.gameObject.SetActive(isActive);
+    //    }
+    //    targetWeightText.gameObject.SetActive(isActive);
+    //    playerWeightText.gameObject.SetActive(isActive);
+    //    scoreText.gameObject.SetActive(isActive);
+    //}
 
     public void StartGame()
     {
         generateData();
         UpdateScore();
         StartTimer();
-        startButton.gameObject.SetActive(false);
-        toggleGameObjects(true);
+        //startButton.gameObject.SetActive(false);
+        //toggleGameObjects(true);
         score = 0;
         scoreText.text = "Score: 0";
         endGameMenu.gameObject.SetActive(false);
@@ -139,12 +140,17 @@ public class GameManager : Singleton<GameManager>
         targetWeightText.text = "" + targetWeight;
         playerWeightText.text = "0";
 
-        for(int i = 0; i < dragPlanets.Length; i++)
+        for(int i = 0; i < planets.Length; i++)
         {
-            dragPlanets[i].Weight = scenario.Numbers[i];
-            //if (planetKeys[i].Weight == null) print("Found the problem");
-            planetKeys[i].Weight = scenario.Numbers[i];
+            // sets the planet container to active if in the given scenario
+            planets[i].SetUseable(scenario.Numbers.Contains(i+1));
         }
+
+        //for(int i = 0; i < dragPlanets.Length; i++)
+        //{
+        //    dragPlanets[i].Weight = scenario.Numbers[i];
+        //    planetKeys[i].Weight = scenario.Numbers[i];
+        //}
 
     }
 
