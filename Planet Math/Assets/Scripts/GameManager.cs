@@ -17,7 +17,7 @@ public class GameManager : Singleton<GameManager>
     //[SerializeField] Button startButton;
     [SerializeField] float maxTime = 45f;
     [SerializeField] Image endGameMenu;
-    [SerializeField] Planet[] planets;
+    [SerializeField] PlanetContainer[] planetContainers;
 
     private int targetWeight;
     private int userWeight;
@@ -47,6 +47,10 @@ public class GameManager : Singleton<GameManager>
     private NumberGen[] scenarios = { new NumberGen(7, 25, new int[] { 2, 4, 5, 10 }, new int[] { 21, 23 }),
                                         new NumberGen(6, 24, new int[] { 2, 3, 5, 8 }, new int[] {17, 20, 22, 23 }),
                                         new NumberGen(7, 27, new int[] { 2, 5, 6, 9 }, new int[] {22, 25, 26 }),
+                                        new NumberGen(3, 27, new int[] { 1, 2, 7, 9 }, new int[] {7, 9, 22, 24, 26 }),
+                                        new NumberGen(6, 18, new int[] { 3, 4, 5, 6 }, new int[] {}),
+                                        new NumberGen(8, 27, new int[] { 4, 6, 7, 9 }, new int[] {9, 26}),
+                                        new NumberGen(6, 30, new int[] { 3, 5, 8, 10 }, new int[] {7, 12, 17, 22, 27, 29}),
                                         new NumberGen(7, 18, new int[] { 1, 3, 4, 6 }, new int[] {17})};
 
     // Use this for initialization
@@ -139,11 +143,11 @@ public class GameManager : Singleton<GameManager>
         } while (scenario.Exceptions.Contains(targetWeight));
         targetWeightText.text = "" + targetWeight;
         playerWeightText.text = "0";
-
-        for(int i = 0; i < planets.Length; i++)
+        
+        for(int i = 0; i < planetContainers.Length; i++)
         {
             // sets the planet container to active if in the given scenario
-            planets[i].SetUseable(scenario.Numbers.Contains(i+1));
+            planetContainers[i].SetUseable(scenario.Numbers.Contains(i+1));
         }
 
         //for(int i = 0; i < dragPlanets.Length; i++)
@@ -171,12 +175,18 @@ public class GameManager : Singleton<GameManager>
 
         if (userWeight == targetWeight)
         {
-            generateData();
             score++;
             scoreText.text = "Score: " + score;
-            clearCells();
+            StartCoroutine(waitToStartNextRound());
         }
 
+    }
+
+    IEnumerator waitToStartNextRound()
+    {
+        yield return new WaitForSeconds(.5f);
+        clearCells();
+        generateData();
     }
 
     private void clearCells()

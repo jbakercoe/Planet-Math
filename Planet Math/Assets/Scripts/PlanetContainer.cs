@@ -30,12 +30,12 @@ public class PlanetContainer : MonoBehaviour {
         if (active)
         {
             alpha = 255;
-        }
-        else
+        } else
         {
-            alpha = 100;
+            alpha = 50;
         }
         transform.GetChild(0).GetComponent<Image>().color = new Color32(255, 255, 255, alpha);
+        transform.GetChild(0).GetComponent<Planet>().SetDraggable(active);
         transform.GetChild(1).GetComponent<Text>().color = new Color32(0, 0, 0, alpha);
     }
 }
